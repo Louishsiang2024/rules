@@ -1,0 +1,16 @@
+# 代理补充列表
+
+# 域名后缀匹配
+DOMAIN-SUFFIX,mypikpak.com
+DOMAIN-SUFFIX,user.mypikpak.com
+DOMAIN-SUFFIX,api-drive.mypikpak.com
+DOMAIN-SUFFIX,mypikpak.cloud
+DOMAIN-SUFFIX,pikpak.cloud
+
+# 域名关键字匹配
+DOMAIN-KEYWORD,dl-a10b
+# IP段匹配
+IP-CIDR,47.241.0.0/16,no-resolve
+IP-CIDR,8.210.0.0/16,no-resolve
+
+
