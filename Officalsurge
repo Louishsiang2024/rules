@@ -1,0 +1,75 @@
+[General]
+# --- 保留官方模板默认参数，确保兼容性 ---
+loglevel = notify
+ipv6 = false
+dns-server = 223.5.5.5, 114.114.114.114
+skip-proxy = 192.168.0.0/24, 10.0.0.0/8, 172.16.0.0/12, 127.0.0.1, localhost, *.local
+internet-test-url = http://bing.com
+proxy-test-url = http://cp.cloudflare.com/generate_204
+test-timeout = 5
+
+[Proxy]
+# 占位符，实际节点从订阅获取
+DIRECT = direct
+REJECT = reject
+
+[Proxy Group]
+# ================== 核心策略组 ================== 
+Proxy = select, All Select, Manual Select, Auto Select, Auto Balance, update-interval=0, policy-path=你的订阅地址
+
+All Select = select, policy-path=你的订阅地址, policy-regex-filter=.*, update-interval=86400, hidden=false
+
+Manual Select = select, policy-path=你的订阅地址, policy-regex-filter=S1|S2|S3|US|United\ States|\.com, update-interval=3600, hidden=false
+
+Auto Select = url-test, policy-path=你的订阅地址, policy-regex-filter=.*, url=http://www.gstatic.com/generate_204, interval=600, tolerance=50, hidden=false
+
+Auto Balance = load-balance, policy-path=你的订阅地址, policy-regex-filter=.*, url=http://www.gstatic.com/generate_204, interval=600, hidden=false
+
+# ================== 服务专用策略组 ==================
+Pikpak = select, Proxy, All Select, Manual Select, Auto Select, Auto Balance, update-interval=3600, hidden=false
+
+Telegram = select, Proxy, All Select, Manual Select, Auto Select, Auto Balance, update-interval=3600, hidden=false
+
+OpenAI = select, Proxy, All Select, Manual Select, Auto Select, Auto Balance, update-interval=3600, hidden=false
+
+Pluto = select, Proxy, All Select, Manual Select, Auto Select, Auto Balance, update-interval=3600, hidden=false
+
+Crypto = select, Proxy, All Select, Manual Select, Auto Select, Auto Balance, update-interval=3600, hidden=false
+
+Binance = select, Proxy, All Select, Manual Select, Auto Select, Auto Balance, update-interval=3600, hidden=false
+
+[Rule]
+# ================== 自定义规则 ==================
+RULE-SET,https://raw.githubusercontent.com/bunizao/TutuBetterRules/tutu/RuleList/DOMAlN/Telegram.list,Telegram,no-resolve
+
+DOMAIN-SUFFIX,xn--ngstr-lra8j.com,Proxy
+DOMAIN-SUFFIX,services.googleapis.cn,Proxy
+
+# ================== 服务规则集 ==================
+RULE-SET,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/GoogleCNProxyIP.list,Proxy
+RULE-SET,https://raw.githubusercontent.com/Louishsiang2024/rules/main/Pikpak.list,Pikpak
+RULE-SET,https://raw.githubusercontent.com/Louishsiang2024/rules/main/pluto.list,Pluto
+RULE-SET,https://raw.githubusercontent.com/Louishsiang2024/rules/main/OpenAI.list,OpenAI
+RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Binance/Binance.list,Binance
+RULE-SET,https://raw.githubusercontent.com/Louishsiang2024/rules/main/Crypto.list,Crypto
+
+# ================== 基础规则集 ==================
+RULE-SET,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/LocalAreaNetwork.list,DIRECT
+RULE-SET,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/UnBan.list,DIRECT
+RULE-SET,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ChinaDomain.list,DIRECT
+RULE-SET,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ChinaMedia.list,DIRECT
+RULE-SET,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/BanAD.list,REJECT
+RULE-SET,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/BanProgramAD.list,REJECT
+RULE-SET,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ChinaCompanyIp.list,DIRECT
+RULE-SET,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ChinaIp.list,DIRECT
+RULE-SET,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ProxyGFWlist.list,Proxy
+
+# ================== 终局规则 ==================
+GEOIP,CN,DIRECT,no-resolve
+FINAL,Proxy,dns-failed
+
+[MITM]
+# 保留官方默认参数
+skip-server-cert-verify = true
+h2 = true
+hostname = -*.apple.com, -*.icloud.com
